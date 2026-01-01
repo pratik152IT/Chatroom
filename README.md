@@ -7,7 +7,7 @@ This project demonstrates a complete **"Code-to-Cloud"** workflow, featuring sec
 
 ## 🌐 Live Demo & Repository
 
-* **Live App:** [PASTE YOUR RENDER URL HERE]
+* **Live App:** (https://chatroom-np9x.onrender.com)
 * **GitHub Repo:** [https://github.com/pratik152IT/Chatroom](https://www.google.com/search?q=https://github.com/pratik152IT/Chatroom)
 
 ---
