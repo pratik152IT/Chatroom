@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nature Chat Pro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --text-main: #1f2937;
+            --accent: #6366f1;
+            --glass-border: rgba(255, 255, 255, 0.4);
+        }
+
+        .dark {
+            --card-bg: rgba(15, 23, 42, 0.8);
+            --text-main: #f3f4f6;
+            --accent: #818cf8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: background 1s ease;
+            color: var(--text-main);
+            background: linear-gradient(#aee1ff, #d5f2ff, #7dd27d);
+        }
+
+        body.dark {
+            background: radial-gradient(circle at top, #1e293b, #020617);
+        }
+
+        /* ---------- NATURE ELEMENTS ---------- */
+        .sun {
+            position: fixed;
+            top: 10%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            background: #ffdb58;
+            border-radius: 50%;
+            box-shadow: 0 0 50px #ffdb58;
+            transition: 1s;
+        }
+
+        .dark .sun { transform: translateY(-200px); opacity: 0; }
+
+        .cloud {
+            position: fixed;
+            background: white;
+            width: 120px;
+            height: 40px;
+            border-radius: 50px;
+            opacity: 0.8;
+            animation: drift 20s linear infinite;
+        }
+
+        @keyframes drift {
+            from { left: -150px; }
+            to { left: 110%; }
+        }
+
+        .moon {
+            position: fixed;
+            top: 10%;
+            right: 10%;
+            width: 80px;
+            height: 80px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #cbd5e1;
+            transform: translateY(-200px);
+            transition: 1s;
+        }
+
+        .dark .moon { transform: translateY(0); }
+
+        /* ---------- CHAT BOX (GLASSMORPHISM) ---------- */
+        .container {
+            width: 90%;
+            max-width: 900px;
+            height: 80vh;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .header {
+            padding: 20px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        #chatScreen {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Scrollbar Styling */
+        #messages::-webkit-scrollbar { width: 6px; }
+        #messages::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
+        .message { max-width: 75%; display: flex; flex-direction: column; }
+        .message.own { align-self: flex-end; }
+
+        .bubble {
+            padding: 12px 18px;
+            border-radius: 18px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .dark .bubble { background: #1e293b; color: white; }
+
+        .own .bubble {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .meta { font-size: 0.7rem; margin-top: 5px; opacity: 0.6; }
+        .own .meta { text-align: right; }
+
+        .input-area {
+            padding: 20px;
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        input {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.2);
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: 30px;
+            border: none;
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn:hover { opacity: 0.9; transform: scale(1.05); }
+
+        /* Login Screen */
+        #loginScreen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sun"></div>
+<div class="moon"></div>
+<div class="cloud" style="top: 15%; animation-duration: 25s;"></div>
+<div class="cloud" style="top: 30%; animation-duration: 35s; opacity: 0.5;"></div>
+
+<div class="container">
+    <div class="header">
+        <h2 style="font-weight: 600; font-size: 1.2rem;">🍃 NatureChat</h2>
+        <button class="btn" style="padding: 5px 15px;" onclick="toggleTheme()">🌗 Mode</button>
+    </div>
+
+    <div id="loginScreen">
+        <h1>Welcome Back</h1>
+        <p style="margin-bottom: 20px; opacity: 0.7;">Join the conversation in a peaceful space.</p>
+        <input id="usernameInput" type="text" placeholder="Enter your username..." style="max-width: 300px; margin-bottom: 15px;">
+        <button class="btn" onclick="joinChat()">Start Chatting</button>
+    </div>
+
+    <div id="chatScreen">
+        <div id="messages"></div>
+        <div class="input-area">
+            <input id="messageInput" type="text" placeholder="Write a message...">
+            <button class="btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let ws;
+    let username = "";
+
+    function toggleTheme() {
+        document.body.classList.toggle("dark");
+        localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+    }
+
+    if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark");
+
+    function joinChat() {
+        username = document.getElementById("usernameInput").value.trim();
+        if (!username) return alert("Please enter a username!");
+
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("chatScreen").style.display = "flex";
+
+        // Logic for WebSocket
+        ws = new WebSocket("ws://localhost:8080/ws/chat");
+
+        ws.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            addMessage(data.from, data.message);
+        };
+
+        // Add "Enter" key support
+        document.getElementById("messageInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") sendMessage();
+        });
+    }
+
+    function addMessage(from, text) {
+        const msgDiv = document.createElement("div");
+        const isOwn = from === username;
+        msgDiv.className = `message ${isOwn ? 'own' : ''}`;
+
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        msgDiv.innerHTML = `
+            <div class="bubble">
+                <strong style="display:block; font-size: 0.75rem; margin-bottom: 4px;">${from}</strong>
+                ${escapeHTML(text)}
+            </div>
+            <div class="meta">${time}</div>
+        `;
+
+        const container = document.getElementById("messages");
+        container.appendChild(msgDiv);
+
+        // Auto-scroll to bottom
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function sendMessage() {
+        const input = document.getElementById("messageInput");
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        // Visual feedback immediately (Optional, depends on your backend echo logic)
+        // If your backend echoes the message back, remove the next line.
+        // addMessage(username, msg);
+
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: "message", username, message: msg }));
+        }
+
+        input.value = "";
+    }
+
+    function escapeHTML(str) {
+        const p = document.createElement("p");
+        p.textContent = str;
+        return p.innerHTML;
+    }
+</script>
+
+</body>
+</html>
