@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) {
         try {
 
-           
+
             String portFromEnv = System.getenv("PORT");
             int port = (portFromEnv != null) ? Integer.parseInt(portFromEnv) : 8080;
 
