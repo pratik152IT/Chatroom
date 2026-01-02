@@ -243,7 +243,7 @@
         document.getElementById("chatScreen").style.display = "flex";
 
         // Logic for WebSocket
-        ws = new WebSocket("ws://localhost:8080/ws/chat");
+        ws = new WebSocket("wss://chatroom-np9x.onrender.com/ws/chat");
 
         ws.onmessage = (e) => {
             const data = JSON.parse(e.data);
