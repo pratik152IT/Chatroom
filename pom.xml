@@ -67,7 +67,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Maven Shade Plugin - Creates executable JAR -->
+            <!-- Maven Shade Plugin - Creates executable JAR with dependencies -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
